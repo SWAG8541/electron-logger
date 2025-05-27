@@ -1,0 +1,60 @@
+{
+  "name": "activity-logger-desktop",
+  "version": "1.0.0",
+  "description": "Desktop application for tracking user activity with screenshots, keyboard and mouse logging",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "keywords": [
+    "electron",
+    "activity",
+    "logger",
+    "screenshot",
+    "keyboard",
+    "mouse",
+    "tracking"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "electron-store": "^10.0.1",
+    "moment": "^2.30.1",
+    "mongodb": "^6.16.0",
+    "node-global-key-listener": "^0.3.0",
+    "screenshot-desktop": "^1.15.1"
+  },
+  "devDependencies": {
+    "electron": "^36.1.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.activitylogger.app",
+    "productName": "Activity Logger",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!webapp/**/*",
+      "!node_modules/**/*",
+      "!dist/**/*",
+      "!**/*.md"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    }
+  }
+}

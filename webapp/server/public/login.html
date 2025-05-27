@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activity Logger - Login</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Container layout */
+    .container {
+      max-width: 400px;
+      background-color: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    /* Headings */
+    h1 {
+      color: #2c3e50;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    h2 {
+      color: #3498db;
+      margin-bottom: 30px;
+      font-weight: normal;
+      font-size: 18px;
+    }
+
+    .icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      color: #3498db;
+    }
+
+    /* Form styles */
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      margin-top: 15px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">🔐</div>
+    <h1>Activity Logger Dashboard</h1>
+    <h2>Please log in to continue</h2>
+    
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Enter your email" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required>
+    </div>
+    
+    <button id="loginButton">Log In</button>
+    
+    <div class="error-message" id="errorMessage">
+      Invalid email or password. Please try again.
+    </div>
+  </div>
+
+  <script>
+    // Login credentials
+    const validEmail = 'user@example.com';
+    const validPassword = 'user@123';
+
+    // DOM elements
+    const loginButton = document.getElementById('loginButton');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Check if already logged in
+    function checkLoginStatus() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      if (isLoggedIn) {
+        window.location.href = '/dashboard.html';
+      }
+    }
+
+    // Handle login button click
+    loginButton.addEventListener('click', () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (email === validEmail && password === validPassword) {
+        // Successful login
+        localStorage.setItem('isLoggedIn', 'true');
+        window.location.href = '/dashboard.html';
+      } else {
+        // Failed login
+        errorMessage.style.display = 'block';
+        passwordInput.value = '';
+      }
+    });
+
+    // Allow Enter key to submit the form
+    passwordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        loginButton.click();
+      }
+    });
+
+    // Check login status on page load
+    checkLoginStatus();
+  </script>
+</body>
+</html>

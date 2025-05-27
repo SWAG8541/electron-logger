@@ -1,0 +1,26 @@
+{
+  "name": "activity-logger-webapp",
+  "version": "1.0.0",
+  "description": "Web application for viewing activity logs collected by the Activity Logger",
+  "scripts": {
+    "start-server": "cd server && npm start",
+    "start-client": "cd client && npm start",
+    "dev-server": "cd server && npm run dev",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "start": "concurrently \"npm run start-server\" \"npm run start-client\""
+  },
+  "keywords": [
+    "express",
+    "react",
+    "mongodb",
+    "activity",
+    "logger",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.0"
+  }
+}

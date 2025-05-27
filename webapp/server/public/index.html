@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activity Logger Dashboard</title>
+  <script>
+    // Check login status and redirect accordingly
+    window.onload = function() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      if (isLoggedIn) {
+        window.location.href = '/dashboard.html';
+      } else {
+        window.location.href = '/login.html';
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f5f5f5;
+    }
+    
+    p {
+      font-size: 18px;
+      color: #3498db;
+    }
+  </style>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>

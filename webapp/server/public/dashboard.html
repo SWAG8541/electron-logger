@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activity Logger Dashboard</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px 0;
+      margin-bottom: 30px;
+    }
+
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Navigation */
+    nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav li {
+      margin-left: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 3px;
+      transition: background-color 0.3s;
+    }
+
+    nav a:hover, nav a.active {
+      background-color: #3498db;
+    }
+
+    /* Date selector */
+    .date-selector {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .date-selector select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    /* Cards */
+    .card {
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background-color: #f8f9fa;
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      font-weight: bold;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    /* Dashboard stats */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-card h3 {
+      font-size: 36px;
+      margin: 10px 0;
+      color: #3498db;
+    }
+
+    .stat-card p {
+      color: #7f8c8d;
+      margin: 0;
+    }
+
+    /* Screenshots */
+    .screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .screenshot-item {
+      background-color: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .screenshot-header {
+      background-color: #f8f9fa;
+      padding: 10px 15px;
+      border-bottom: 1px solid #eee;
+      font-weight: bold;
+    }
+
+    .screenshot-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+    }
+
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    /* Loading state */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab.active {
+      border-bottom-color: #3498db;
+      font-weight: bold;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Buttons */
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    button:disabled {
+      background-color: #bdc3c7;
+      cursor: not-allowed;
+    }
+
+    .load-more-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #3498db;
+    }
+
+    .reset-btn {
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #95a5a6;
+    }
+
+    .load-more-container {
+      grid-column: 1 / -1;
+      width: 100%;
+    }
+
+    /* Pagination controls */
+    .pagination-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    select {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Activity Logger Dashboard</h1>
+      <nav>
+        <ul>
+          <li><a href="#" class="active" data-tab="dashboard">Dashboard</a></li>
+          <li><a href="#" data-tab="screenshots">Screenshots</a></li>
+          <li><a href="#" data-tab="keyboard">Keyboard Activity</a></li>
+          <li><a href="#" data-tab="mouse">Mouse Activity</a></li>
+          <li><a href="#" id="logoutButton" style="color: #e74c3c;">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="date-selector">
+      <label for="date-select">Select Date:</label>
+      <select id="date-select">
+        <option value="2025-05-06">2025-05-06 (Today)</option>
+      </select>
+    </div>
+
+    <div id="dashboard" class="tab-content active">
+      <h2>Activity Summary</h2>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <p>Screenshots</p>
+          <h3 id="screenshot-count">0</h3>
+        </div>
+        <div class="stat-card">
+          <p>Keystrokes</p>
+          <h3 id="keystroke-count">0</h3>
+        </div>
+        <div class="stat-card">
+          <p>Mouse Movements</p>
+          <h3 id="mouse-count">0</h3>
+        </div>
+        <div class="stat-card">
+          <p>Active Hours</p>
+          <h3 id="active-hours">0</h3>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Activity Timeline</div>
+        <div class="card-body">
+          <p>First activity: <span id="first-activity">--:--:--</span></p>
+          <p>Last activity: <span id="last-activity">--:--:--</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="screenshots" class="tab-content">
+      <h2>Screenshots</h2>
+      <div id="screenshots-container" class="screenshot-grid">
+        <div class="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="keyboard" class="tab-content">
+      <h2>Keyboard Activity</h2>
+      <div class="card">
+        <div class="card-body">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Key</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="keylog-table-body">
+              <tr>
+                <td colspan="3" class="loading">
+                  <div class="spinner"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="mouse" class="tab-content">
+      <h2>Mouse Activity</h2>
+      <div class="card">
+        <div class="card-header">Mouse Movement Heatmap</div>
+        <div class="card-body">
+          <div id="heatmap-container" style="position: relative; width: 100%; height: 500px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; overflow: hidden;">
+            <canvas id="heatmap-canvas" width="1920" height="1080" style="width: 100%; height: 100%;"></canvas>
+            <div id="heatmap-loading" class="loading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background-color: rgba(255, 255, 255, 0.8);">
+              <div class="spinner"></div>
+            </div>
+          </div>
+          <div style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <span>Total mouse movements: </span>
+              <span id="mouse-movement-count">0</span>
+            </div>
+            <div>
+              <label for="heatmap-intensity">Heatmap Intensity: </label>
+              <input type="range" id="heatmap-intensity" min="1" max="100" value="50" style="width: 150px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check login status on page load
+    window.onload = function() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      if (!isLoggedIn) {
+        window.location.href = '/login.html';
+      }
+    };
+
+    // Tab switching
+    document.querySelectorAll('nav a').forEach(tab => {
+      if (tab.id !== 'logoutButton') {
+        tab.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          // Update active tab
+          document.querySelectorAll('nav a').forEach(t => t.classList.remove('active'));
+          this.classList.add('active');
+
+          // Show corresponding content
+          const tabId = this.getAttribute('data-tab');
+          document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+          });
+          document.getElementById(tabId).classList.add('active');
+        });
+      }
+    });
+
+    // Logout functionality
+    document.getElementById('logoutButton').addEventListener('click', function(e) {
+      e.preventDefault();
+      localStorage.removeItem('isLoggedIn');
+      window.location.href = '/login.html';
+    });
+
+    // Date selector
+    const dateSelect = document.getElementById('date-select');
+    dateSelect.addEventListener('change', function() {
+      loadData(this.value);
+    });
+
+    // Load data for selected date
+    function loadData(date) {
+      // Load summary data
+      fetch(`/api/summary/${date}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('screenshot-count').textContent = data.screenshotCount;
+          document.getElementById('keystroke-count').textContent = data.keystrokeCount;
+          document.getElementById('mouse-count').textContent = data.mouseMovementCount;
+          document.getElementById('mouse-movement-count').textContent = data.mouseMovementCount;
+          document.getElementById('active-hours').textContent = data.activeDuration ? data.activeDuration.toFixed(1) : '0';
+
+          if (data.startTime) {
+            const startTime = new Date(data.startTime);
+            document.getElementById('first-activity').textContent = startTime.toLocaleTimeString();
+          }
+
+          if (data.endTime) {
+            const endTime = new Date(data.endTime);
+            document.getElementById('last-activity').textContent = endTime.toLocaleTimeString();
+          }
+        })
+        .catch(error => console.error('Error loading summary:', error));
+
+      // Load available dates
+      fetch('/api/dates')
+        .then(response => response.json())
+        .then(dates => {
+          dateSelect.innerHTML = '';
+          dates.forEach(d => {
+            const option = document.createElement('option');
+            option.value = d;
+            option.textContent = d;
+            if (d === date) {
+              option.selected = true;
+            }
+            dateSelect.appendChild(option);
+          });
+        })
+        .catch(error => console.error('Error loading dates:', error));
+
+      // Load screenshots (without image data initially)
+      loadScreenshots(date);
+
+      // Load keyboard data with pagination
+      loadKeyboardData(date);
+
+      // Load mouse movement data and generate heatmap
+      loadMouseHeatmap(date);
+    }
+
+    // Pagination state variables
+    let currentScreenshotPage = 1;
+    let screenshotPageSize = 5;
+    let totalScreenshots = 0;
+
+    /**
+     * Loads screenshots with pagination support
+     * @param {string} date - The date to load screenshots for
+     * @param {number} page - The page number to load
+     * @param {number} pageSize - Number of screenshots per page
+     * @param {boolean} append - Whether to append to existing screenshots
+     */
+    function loadScreenshots(date, page = 1, pageSize = 5, append = false) {
+      const container = document.getElementById('screenshots-container');
+
+      // Handle container state based on append mode
+      if (!append) {
+        container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+      } else {
+        // Remove existing load more button if present
+        const loadMoreBtn = document.getElementById('load-more-screenshots');
+        if (loadMoreBtn) loadMoreBtn.remove();
+
+        // Add loading indicator
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'loading';
+        loadingDiv.id = 'screenshots-loading-more';
+        loadingDiv.innerHTML = '<div class="spinner"></div>';
+        container.appendChild(loadingDiv);
+      }
+
+      // Update pagination state
+      currentScreenshotPage = page;
+      screenshotPageSize = pageSize;
+      const skip = (page - 1) * pageSize;
+
+      // Fetch screenshots with pagination
+      fetch(`/api/screenshots/${date}?limit=${pageSize}&skip=${skip}&includeImages=false&count=true`)
+        .then(response => response.json())
+        .then(result => {
+          // Clean up loading indicators
+          if (append) {
+            const loadingMore = document.getElementById('screenshots-loading-more');
+            if (loadingMore) loadingMore.remove();
+          } else {
+            container.innerHTML = '';
+          }
+
+          // Process results
+          const screenshots = result.data || [];
+          totalScreenshots = result.total || 0;
+
+          // Handle empty results
+          if (screenshots.length === 0 && !append) {
+            container.innerHTML = '<p>No screenshots available for this date.</p>';
+            return;
+          }
+
+          // Create screenshot elements
+          screenshots.forEach(screenshot => {
+            const screenshotItem = document.createElement('div');
+            screenshotItem.className = 'screenshot-item';
+            screenshotItem.innerHTML = `
+              <div class="screenshot-header">${screenshot.time}</div>
+              <div class="screenshot-body" id="screenshot-${screenshot.id}">
+                <div class="loading"><div class="spinner"></div></div>
+              </div>
+            `;
+            container.appendChild(screenshotItem);
+            loadScreenshotImage(date, screenshot.id);
+          });
+
+          // Add pagination controls
+          const loadedCount = (page - 1) * pageSize + screenshots.length;
+
+          if (loadedCount < totalScreenshots) {
+            // Show load more button
+            const loadMoreDiv = document.createElement('div');
+            loadMoreDiv.className = 'load-more-container';
+            loadMoreDiv.id = 'load-more-screenshots';
+            loadMoreDiv.innerHTML = `
+              <div style="text-align: center; margin: 20px 0;">
+                <p>Showing ${loadedCount} of ${totalScreenshots} screenshots</p>
+                <button onclick="loadScreenshots('${date}', ${page + 1}, ${pageSize}, true)" class="load-more-btn">
+                  Load More Screenshots
+                </button>
+              </div>
+            `;
+            container.appendChild(loadMoreDiv);
+          } else if (totalScreenshots > pageSize) {
+            // Show reset view button when all screenshots are loaded
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'screenshots-status';
+            statusDiv.innerHTML = `
+              <div style="text-align: center; margin: 20px 0;">
+                <p>All ${totalScreenshots} screenshots loaded</p>
+                <button onclick="loadScreenshots('${date}', 1, ${pageSize}, false)" class="reset-btn">
+                  Reset View
+                </button>
+              </div>
+            `;
+            container.appendChild(statusDiv);
+          }
+        })
+        .catch(error => {
+          console.error('Error loading screenshots:', error);
+          if (!append) {
+            container.innerHTML = '<p>Error loading screenshots. Please try again.</p>';
+          } else {
+            const loadingMore = document.getElementById('screenshots-loading-more');
+            if (loadingMore) {
+              loadingMore.innerHTML = '<p>Error loading more screenshots. Please try again.</p>';
+            }
+          }
+        });
+    }
+
+    /**
+     * Loads an individual screenshot image
+     * @param {string} date - The date of the screenshot
+     * @param {string} id - The ID of the screenshot to load
+     */
+    function loadScreenshotImage(date, id) {
+      fetch(`/api/screenshots/${date}/${id}`)
+        .then(response => response.json())
+        .then(screenshot => {
+          const container = document.getElementById(`screenshot-${id}`);
+          if (container) {
+            container.innerHTML = `<img src="data:image/png;base64,${screenshot.image}" class="screenshot-image" alt="Screenshot at ${screenshot.time}">`;
+          }
+        })
+        .catch(error => {
+          console.error(`Error loading screenshot ${id}:`, error);
+          const container = document.getElementById(`screenshot-${id}`);
+          if (container) {
+            container.innerHTML = '<p>Error loading image</p>';
+          }
+        });
+    }
+
+    /**
+     * Loads keyboard activity data with pagination
+     * @param {string} date - The date to load data for
+     * @param {number} page - The page number to load
+     * @param {number} pageSize - Number of entries per page
+     */
+    function loadKeyboardData(date, page = 1, pageSize = 50) {
+      const tableBody = document.getElementById('keylog-table-body');
+      tableBody.innerHTML = '<tr><td colspan="3" class="loading"><div class="spinner"></div></td></tr>';
+
+      const skip = (page - 1) * pageSize;
+
+      fetch(`/api/keylogs/${date}?limit=${pageSize}&skip=${skip}`)
+        .then(response => response.json())
+        .then(result => {
+          // Handle empty results
+          if (result.data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="3">No keyboard activity available for this date.</td></tr>';
+            return;
+          }
+
+          tableBody.innerHTML = '';
+
+          // Add rows for each keylog
+          result.data.forEach(keylog => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${keylog.time}</td>
+              <td>${keylog.key}</td>
+              <td>${keylog.state}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+
+          // Add pagination controls if needed
+          if (result.total > pageSize) {
+            const totalPages = Math.ceil(result.total / pageSize);
+            const paginationRow = document.createElement('tr');
+
+            // Create page options for dropdown
+            let pageOptions = '';
+            for (let i = 1; i <= totalPages; i++) {
+              pageOptions += `<option value="${i}" ${i === result.page ? 'selected' : ''}>${i}</option>`;
+            }
+
+            // Create pagination controls
+            paginationRow.innerHTML = `
+              <td colspan="3" style="text-align: center;">
+                <div style="margin-bottom: 10px;">
+                  Page ${result.page} of ${totalPages}
+                </div>
+                <div class="pagination-controls">
+                  <button ${result.page > 1 ? '' : 'disabled'}
+                          onclick="loadKeyboardData('${date}', ${result.page - 1}, ${pageSize})">
+                    Previous
+                  </button>
+
+                  <div style="display: flex; align-items: center;">
+                    <span style="margin-right: 5px;">Go to:</span>
+                    <select onchange="loadKeyboardData('${date}', parseInt(this.value), ${pageSize})">
+                      ${pageOptions}
+                    </select>
+                  </div>
+
+                  <button ${result.page < totalPages ? '' : 'disabled'}
+                          onclick="loadKeyboardData('${date}', ${result.page + 1}, ${pageSize})">
+                    Next
+                  </button>
+                </div>
+              </td>
+            `;
+            tableBody.appendChild(paginationRow);
+          }
+        })
+        .catch(error => {
+          console.error('Error loading keyboard data:', error);
+          tableBody.innerHTML = '<tr><td colspan="3">Error loading keyboard data. Please try again.</td></tr>';
+        });
+    }
+
+    /**
+     * Loads mouse movement data and generates a heatmap visualization
+     * @param {string} date - The date to load data for
+     * @param {number} sampleSize - Number of data points to sample
+     */
+    function loadMouseHeatmap(date, sampleSize = 1000) {
+      const canvas = document.getElementById('heatmap-canvas');
+      const ctx = canvas.getContext('2d');
+      const loadingElement = document.getElementById('heatmap-loading');
+      const intensitySlider = document.getElementById('heatmap-intensity');
+
+      // Clear previous heatmap and show loading indicator
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      loadingElement.style.display = 'flex';
+
+      // Fetch mouse movement data
+      fetch(`/api/mouse/${date}?sample=${sampleSize}`)
+        .then(response => response.json())
+        .then(result => {
+          // Handle empty results
+          if (!result.data || result.data.length === 0) {
+            loadingElement.style.display = 'none';
+            displayMessage(ctx, canvas.width, canvas.height, 'No mouse activity data available for this date');
+            return;
+          }
+
+          // Update the mouse movement count
+          document.getElementById('mouse-movement-count').textContent = result.total;
+
+          // Generate heatmap with current intensity setting
+          const intensity = parseInt(intensitySlider.value) / 100;
+          generateHeatmap(ctx, canvas.width, canvas.height, result.data, intensity);
+          loadingElement.style.display = 'none';
+
+          // Add event listener for intensity slider
+          intensitySlider.oninput = function() {
+            const newIntensity = parseInt(this.value) / 100;
+            generateHeatmap(ctx, canvas.width, canvas.height, result.data, newIntensity);
+          };
+        })
+        .catch(error => {
+          console.error('Error loading mouse data:', error);
+          loadingElement.style.display = 'none';
+          displayMessage(ctx, canvas.width, canvas.height, 'Error loading mouse activity data');
+        });
+    }
+
+    /**
+     * Displays a message on the canvas
+     * @param {CanvasRenderingContext2D} ctx - Canvas context
+     * @param {number} width - Canvas width
+     * @param {number} height - Canvas height
+     * @param {string} message - Message to display
+     */
+    function displayMessage(ctx, width, height, message) {
+      ctx.font = '20px Arial';
+      ctx.fillStyle = '#666';
+      ctx.textAlign = 'center';
+      ctx.fillText(message, width / 2, height / 2);
+    }
+
+    /**
+     * Generates a heatmap visualization from mouse movement data
+     * @param {CanvasRenderingContext2D} ctx - Canvas context
+     * @param {number} width - Canvas width
+     * @param {number} height - Canvas height
+     * @param {Array} data - Mouse movement data points
+     * @param {number} intensity - Intensity factor (0-1)
+     */
+    function generateHeatmap(ctx, width, height, data, intensity = 0.5) {
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+
+      // Create a temporary canvas for the heatmap
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = width;
+      tempCanvas.height = height;
+      const tempCtx = tempCanvas.getContext('2d');
+
+      // Calculate appropriate radius and alpha based on data size and intensity
+      const radius = Math.max(10, Math.min(50, Math.floor(data.length / 100)));
+      const alpha = Math.max(0.05, Math.min(0.3, intensity));
+
+      // Draw each data point as a radial gradient
+      data.forEach(point => {
+        // Scale coordinates to canvas size
+        const x = (point.x / 1920) * width;
+        const y = (point.y / 1080) * height;
+
+        // Create and apply radial gradient
+        const gradient = tempCtx.createRadialGradient(x, y, 0, x, y, radius);
+        gradient.addColorStop(0, `rgba(255, 0, 0, ${alpha})`);
+        gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+
+        tempCtx.beginPath();
+        tempCtx.arc(x, y, radius, 0, 2 * Math.PI);
+        tempCtx.fillStyle = gradient;
+        tempCtx.fill();
+      });
+
+      // Apply color mapping to create heatmap effect
+      applyColorMapping(tempCtx, width, height, intensity);
+
+      // Draw the processed image to the main canvas
+      ctx.drawImage(tempCanvas, 0, 0);
+
+      // Add a semi-transparent overlay for better visibility
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, width, height);
+
+      // Add information overlay
+      ctx.font = '12px Arial';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.textAlign = 'right';
+      ctx.fillText(`Screen resolution: 1920x1080 | Data points: ${data.length}`, width - 10, height - 10);
+    }
+
+    /**
+     * Applies color mapping to the heatmap canvas
+     * @param {CanvasRenderingContext2D} ctx - Canvas context
+     * @param {number} width - Canvas width
+     * @param {number} height - Canvas height
+     * @param {number} intensity - Intensity factor (0-1)
+     */
+    function applyColorMapping(ctx, width, height, intensity) {
+      const imageData = ctx.getImageData(0, 0, width, height);
+      const pixels = imageData.data;
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        const r = pixels[i];
+        if (r > 0) {
+          // Apply color gradient based on intensity (blue to red)
+          const normalizedValue = Math.min(1, r / 255 * intensity * 3);
+
+          if (normalizedValue < 0.33) {
+            // Blue to Cyan
+            pixels[i] = 0; // R
+            pixels[i + 1] = Math.floor(255 * (normalizedValue * 3)); // G
+            pixels[i + 2] = 255; // B
+          } else if (normalizedValue < 0.66) {
+            // Cyan to Yellow
+            pixels[i] = Math.floor(255 * ((normalizedValue - 0.33) * 3)); // R
+            pixels[i + 1] = 255; // G
+            pixels[i + 2] = Math.floor(255 * (1 - (normalizedValue - 0.33) * 3)); // B
+          } else {
+            // Yellow to Red
+            pixels[i] = 255; // R
+            pixels[i + 1] = Math.floor(255 * (1 - (normalizedValue - 0.66) * 3)); // G
+            pixels[i + 2] = 0; // B
+          }
+
+          // Adjust alpha based on intensity
+          pixels[i + 3] = Math.min(255, r * intensity * 5);
+        }
+      }
+
+      // Apply the modified pixel data back to the canvas
+      ctx.putImageData(imageData, 0, 0);
+    }
+
+    // Initialize with current date
+    loadData(dateSelect.value);
+  </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "name": "activity-logger",
+  "version": "1.0.0",
+  "description": "Desktop application for tracking user activity with screenshots, keyboard and mouse logging",
+  "scripts": {
+    "start-desktop": "cd DesktopApp && npm start",
+    "start-server": "cd WebApp/server && node server.js",
+    "start-client": "cd WebApp/client && npm start",
+    "dev-server": "cd WebApp/server && nodemon server.js",
+    "install-all": "npm install && cd DesktopApp && npm install && cd ../WebApp/server && npm install && cd ../client && npm install",
+    "pack": "cd DesktopApp && electron-builder --dir",
+    "dist": "cd DesktopApp && electron-builder"
+  },
+  "keywords": [
+    "electron",
+    "activity",
+    "logger",
+    "screenshot",
+    "keyboard",
+    "mouse",
+    "tracking"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "electron-store": "^10.0.1",
+    "moment": "^2.30.1",
+    "mongodb": "^6.16.0",
+    "node-global-key-listener": "^0.3.0",
+    "screenshot-desktop": "^1.15.1"
+  },
+  "devDependencies": {
+    "electron": "^36.1.0",
+    "electron-builder": "^24.13.3",
+    "nodemon": "^3.1.0"
+  },
+  "build": {
+    "appId": "com.activitylogger.app",
+    "productName": "Activity Logger",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "DesktopApp/**/*",
+      "!DesktopApp/node_modules/**/*",
+      "!dist/**/*",
+      "!**/*.md"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "DesktopApp/assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "DesktopApp/assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "DesktopApp/assets/icon.png"
+    }
+  }
+}

@@ -1,0 +1,64 @@
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.screenshot-container {
+  margin-bottom: 30px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.screenshot-header {
+  background-color: #f8f9fa;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.screenshot-image {
+  width: 100%;
+  height: auto;
+}
+
+.keylog-table th, .keylog-table td {
+  text-align: center;
+}
+
+.mouse-activity-chart {
+  height: 400px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card .card-header {
+  font-weight: bold;
+  background-color: #f8f9fa;
+}
+
+.date-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 50px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  margin-top: 20px;
+}
